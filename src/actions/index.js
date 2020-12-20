@@ -47,13 +47,15 @@ export const fetchStream = (id) => async (dispatch) => {
 };
 
 export const editStream = (id, formValues) => async (dispatch) => {
-  const response = await streams.put(`/streams/${id}`, formValues);
+  const response = await streams.patch(`/streams/${id}`, formValues); // We had before a "PUT" request and it's updating ALL the properties of a record. So what happened is that we updated a record to a new one but only with: "title", "description" and "id" stays immune. So we lost an "userId" property inside the record. Therefore we couldn't edit this streams after that (we can edit only if we are the same userId). The "PATCH" request only changes some properties that we pass and the rest records it doesn't change or delete.
 
   dispatch({ type: EDIT_STREAM, payload: response.data });
+  history.push("/");
 };
 
 export const deleteStream = (id) => async (dispatch) => {
   await streams.delete(`/streams/${id}`);
 
   dispatch({ type: DELETE_STREAM, payload: id });
+  history.push("/");
 };
